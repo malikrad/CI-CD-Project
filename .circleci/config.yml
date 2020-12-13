@@ -34,7 +34,6 @@ jobs:
              cd backend
              npm i
              npm run build
-             npm audit fix
              
       - save_cache:
           paths: [backend/node_modules]
