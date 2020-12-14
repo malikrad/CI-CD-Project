@@ -149,7 +149,6 @@ jobs:
             # Your code here
             echo [all] > inventory
             aws ec2 describe-instances \
-\
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=backInfra" \
               --output text >> inventory.txt
