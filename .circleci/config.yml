@@ -149,18 +149,18 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            echo -e "[web]\n" > ./.circleci/ansible/inventory
+            echo -e "[web]\n" > ./.circleci/ansible/inventory.txt
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople" \
               --output text >> .circleci/ansible/inventory
               
-            cat .circleci/ansible/inventory
+            cat .circleci/ansible/inventory.txt
              
       - persist_to_workspace:
           root: .circleci/ansible/
           paths:
-            - inventory
+            - inventory.txt
       # Here's where you will add some code to rollback on failure  
   configure-infrastructure:
     docker:
@@ -174,7 +174,7 @@ jobs:
           fingerprints: ["7c:36:23:30:45:1d:a4:3d:20:59:c6:5d:6f:a3:85:bb"]
       # attach workspace
       - attach_workspace:
-          at: ~/
+          at: .circleci/ansible/
       - run:
           name: Install dependencies
           command: |
@@ -193,7 +193,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cat .circleci/ansible/inventory
-            ansible-playbook -i .circleci/ansible/inventory .circleci/ansible/configure-server.yml
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure      
 
 
