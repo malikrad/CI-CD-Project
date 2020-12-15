@@ -152,7 +152,7 @@ jobs:
             echo -e "[all]\n" > ./.circleci/ansible/inventory.txt
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople" \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
               --output text >> .circleci/ansible/inventory.txt
               
             cat .circleci/ansible/inventory.txt
@@ -225,7 +225,44 @@ jobs:
             else
             curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "false" https://api.memstash.io/values/<< pipeline.id >>_migrations
             fi         
-            
+  deploy-frontend:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip ansible nodejs npm curl
+            pip install awscli
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            export BACKEND_IP=$(aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
+            --output text)
+            echo $BACKEND_IP > .circleci/ansible/backend_ip
+            cd frontend
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}" 
+            npm install 
+            npm run build
+      - persist_to_workspace:
+          root: .circleci/ansible/
+          paths:
+            - backend_ip
+      - run:
+          name: Deploy frontend objects
+          command: |
+            # your code here
+            aws s3 cp frontend/dist "s3://udapeople-${CIRCLE_WORKFLOW_ID}" --recursive
+      # Here's where you will add some code to rollback on failure      
+                  
+
 workflows:
   default:
     jobs:
@@ -244,6 +281,8 @@ workflows:
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
-          requires: [configure-infrastructure]          
+          requires: [configure-infrastructure]   
+      - deploy-frontend:
+          requires: [run-migrations]   
           
       
