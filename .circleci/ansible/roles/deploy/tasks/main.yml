@@ -1,8 +1,6 @@
-- name: directory creation
-  file:
-    path: /home/ubuntu/backend
-    state: directory
-- name: "move backend files to server."
+---
+
+- name: Copy files from project to backend server
   copy:
     src: /root/project/backend
-    dest: /home/ubuntu
+    dest: /home/ubuntu/
