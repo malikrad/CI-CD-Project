@@ -31,6 +31,7 @@ commands:
               npm install
               npm run migration:revert
             fi
+          when: on_fail
 
 jobs:
   build-frontend:
@@ -348,7 +349,7 @@ jobs:
             cd .circleci/ansible
             BACKEND_IP=$(cat backend_ip)
             echo "${BACKEND_IP}"
-            curl "http://${BACKEND_IP}:3030/api/status"
+            curl "https://${BACKEND_IP}:3030/api/status"
             
       - run:
           name: Frontend smoke test.
