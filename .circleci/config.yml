@@ -307,7 +307,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # your code here
+            apk add --update curl
+            apt install curl
+            pip install awscli
       - attach_workspace:
           at: .circleci/ansible/
       - run:
