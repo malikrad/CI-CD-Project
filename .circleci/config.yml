@@ -32,7 +32,6 @@ commands:
               npm run migration:revert
             fi
           when: on_fail
-
 jobs:
   build-frontend:
     docker:
