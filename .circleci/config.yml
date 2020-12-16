@@ -299,7 +299,7 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
-smoke-test:
+  smoke-test:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -328,6 +328,8 @@ smoke-test:
             else
               return 1
             fi
+      # Here's where you will add some code to rollback on failure  
+
 workflows:
   default:
     jobs:
