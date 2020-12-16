@@ -323,7 +323,7 @@ jobs:
           name: Deploy backend
           command: |
         
-            echo ENVIROMENT=development > "backend/.env"
+            echo ENVIROMENT=production > "backend/.env"
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
