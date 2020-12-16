@@ -28,7 +28,10 @@
     global: yes
     production: yes
     state: present
-
+- name: Copy files from circleci to backend server
+  copy:
+    src: /root/project/backend
+    dest: /home/ubuntu/
 #- name: Start pm2
 #  shell: |
 #    cd /home/ubuntu/backend
