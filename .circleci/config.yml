@@ -320,6 +320,12 @@ jobs:
             apk add --update tar gzip ansible nodejs npm
             pip install awscli
       - run:
+          name: Install curl
+          command: apk add curl
+      - run:
+          name: Install Open SSH
+          command: apk add openssh-client
+      - run:
           name: Deploy backend
           command: |
         
