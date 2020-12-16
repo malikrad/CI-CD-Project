@@ -314,7 +314,7 @@ jobs:
           name: Get backend url and run smoke test
           command: |
             cd .circleci/ansible
-            BACKEND_IP=$(cat backend_ip.txt)
+            BACKEND_IP=$(cat backend_ip)
             echo "${BACKEND_IP}"
             curl "http://${BACKEND_IP}:3030/api/status"
             
