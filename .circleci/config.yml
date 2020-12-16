@@ -281,9 +281,16 @@ jobs:
             echo $BACKEND_IP > .circleci/ansible/backend_ip
             cd frontend
             export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL=$API_URL" >> frontend/.env
             echo "${API_URL}" 
-            npm install 
+      - run:
+          name: "Baking backend API_URL into the frontend"
+          command: |
+            npm install webpack-dev-server -g
+            cd frontend
+            npm i
             npm run build
+            npm audit fix --audit-level=critical --force
       - persist_to_workspace:
           root: .circleci/ansible/
           paths:
