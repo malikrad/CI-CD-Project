@@ -45,8 +45,7 @@ jobs:
             cd frontend
             npm i
             npm run build
-      - slack/status:
-          fail_only: true
+      
             
   build-backend:
     docker:
@@ -59,8 +58,7 @@ jobs:
             cd backend
             npm i
             npm run build
-      - slack/status:
-          fail_only: true
+      
           
   test-frontend:
     docker:
