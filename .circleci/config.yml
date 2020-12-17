@@ -25,7 +25,8 @@ commands:
           name: Revert migrations
           # Add when this will run
           command: |
-            SUCCESS = $(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/<< pipeline.id >>_migrations)
+            SUCCESS = $(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/<< pipeline.id >>_runMigrations)
+            echo ${SUCCESS}
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -244,9 +245,9 @@ jobs:
             cd backend
             if grep "has been executed successfully" migrations_results.txt
             then
-            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "1" https://api.memstash.io/values/<< pipeline.id >>_migrations
+            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "1" https://api.memstash.io/values/<< pipeline.id >>_runMigrations
             else
-            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "0" https://api.memstash.io/values/<< pipeline.id >>_migrations
+            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "0" https://api.memstash.io/values/<< pipeline.id >>_runMigrations
             fi
       - destroy-environment
       - revert-migrations 
