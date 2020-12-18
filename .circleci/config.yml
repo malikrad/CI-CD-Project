@@ -384,6 +384,7 @@ jobs:
             fi
       - destroy-environment
       - revert-migrations 
+      
   deploy-cloudfront-and-cleanup:
     docker:
       - image: amazon/aws-cli
