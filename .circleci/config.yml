@@ -384,7 +384,7 @@ jobs:
             fi
       - destroy-environment
       - revert-migrations 
-deploy-cloudfront-and-cleanup:
+  deploy-cloudfront-and-cleanup:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -427,8 +427,8 @@ deploy-cloudfront-and-cleanup:
               echo "Delete old backend stack"              
               aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
             fi
-      - destroy-environment
-      - revert-migrations 
+        - destroy-environment
+        - revert-migrations 
 workflows:
   default:
     jobs:
@@ -447,13 +447,14 @@ workflows:
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
-          requires: [configure-infrastructure]   
+          requires: [configure-infrastructure]
+      - deploy-cloudfront-and-cleanup::
+          requires: [run-migrations]
       - deploy-frontend:
           requires: [run-migrations]   
       - deploy-backend:
           requires: [run-migrations]  
       - smoke-test:
           requires: [deploy-backend, deploy-frontend] 
-      - deploy-cloudfront-and-cleanup::
-          requires: [smoke-test]
+
       
