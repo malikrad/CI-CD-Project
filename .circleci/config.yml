@@ -26,7 +26,7 @@ commands:
           # Add when this will run
           command: |
             SUCCESS = $(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" --request GET https://api.memstash.io/values/<< pipeline.id >>_runMigrations)
-            echo ${SUCCESS}
+            echo {$SUCCESS}
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -256,12 +256,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout    
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update curl
-            apk add --update bash
-            pip install awscli
+    
 
       - run:
           name: Update cloudfront distribution
@@ -452,9 +447,9 @@ workflows:
           requires: [run-migrations]
       - deploy-frontend:
           requires: [run-migrations]   
-      - deploy-backend:
-          requires: [run-migrations]  
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend] 
+      #- deploy-backend:
+       #   requires: [run-migrations]  
+      #- smoke-test:
+       #   requires: [deploy-backend, deploy-frontend] 
 
       
