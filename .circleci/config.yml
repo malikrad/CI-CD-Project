@@ -342,14 +342,7 @@ jobs:
             echo "List of contents before deleting: "
             ls -a
             echo "----------------------------------------"
-            rm -rf node_modules 
-            rm -rf dist
-            rm -rf test
-            rm README.md 
-            echo "List of files and dirs that will be sent to ansible: "
-            ls -a
-            echo "----------------------------------------"
-            mkdir -p ../.circleci/ansible/roles/deploy/files
+            
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
