@@ -7,7 +7,7 @@ commands:
       - run:
           name: Destroy environments
           command: |
-            aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+            aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
             aws cloudformation delete-stack --stack-name "backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack --stack-name "frontend-${CIRCLE_WORKFLOW_ID:0:7}"
             echo "deleted"
@@ -425,11 +425,10 @@ jobs:
           command: |
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then        
-            aws s3 rm s3://udapeople-${OldWorkflowID}/ --recursive
-            aws cloudformation delete-stack --stack-name frontend-${OldWorkflowID}
-            echo "Delete old backend stack"              
-            aws cloudformation delete-stack --stack-name backend-${OldWorkflowID}
-            fi
+            aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
+            #aws cloudformation delete-stack --stack-name backend-${OldWorkflowID} 
+            #aws cloudformation delete-stack --stack-name frontend-${OldWorkflowID}             
+            
             fi
             
 workflows:
@@ -447,6 +446,9 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
